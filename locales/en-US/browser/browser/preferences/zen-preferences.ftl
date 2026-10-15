@@ -383,3 +383,9 @@ domainzen-guidebook-description = Offer shortcuts from your own HTTPS JSON guide
 domainzen-guidebook-enabled =
     .label = Enable DomainZen guidebook shortcuts
 domainzen-guidebook-url-label = Guidebook URL
+
+domainzen-guidebook-refresh =
+    .label = Refresh guidebook now
+domainzen-guidebook-refresh-help = Guidebook data is cached for 15 minutes. A failed refresh keeps the last valid cache.
+domainzen-guidebook-refresh-requested = Refresh requested. If the server is unavailable, the last valid cache remains active.
+domainzen-guidebook-refresh-no-cache = No valid guidebook is available. Check the HTTPS URL and try again.
