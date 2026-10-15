@@ -122,6 +122,19 @@
                   </menupopup>
             </menulist>
         </hbox>
+
+      <label><html:h2 data-l10n-id="domainzen-guidebook-header"/></label>
+      <description class="description-deemphasized" data-l10n-id="domainzen-guidebook-description"/>
+      <checkbox preference="domainzen.enabled"
+                data-l10n-id="domainzen-guidebook-enabled"/>
+      <hbox align="center">
+            <label data-l10n-id="domainzen-guidebook-url-label"/>
+            <textbox id="domainzenGuidebookUrl"
+                     flex="1"
+                     type="url"
+                     preference="domainzen.guidebook-url"
+                     placeholder="https://example.github.io/guidebook.json"/>
+      </hbox>
 </groupbox>
 
 </html:template>
