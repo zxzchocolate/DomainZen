@@ -9,9 +9,10 @@ on:
         type: boolean
         default: true
 
-permissions:
-  contents: write
-  actions: read
+# The upstream reusable release workflow contains jobs that request broad
+# permissions (including write-all). A caller cannot grant less permission
+# than those jobs request, so this must match the reusable workflow's needs.
+permissions: write-all
 
 jobs:
   build:
