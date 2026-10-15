@@ -1168,6 +1168,11 @@ Preferences.addAll([
     default: 0,
   },
   {
+    id: "domainzen.guidebook-cache-source",
+    type: "string",
+    default: "",
+  },
+  {
     id: "zen.view.compact.toolbar-flash-popup",
     type: "bool",
     default: true,
