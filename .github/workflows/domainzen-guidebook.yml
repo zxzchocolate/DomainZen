@@ -13,6 +13,11 @@ on:
   pull_request:
     paths:
       - "domainzen/**"
+      - "src/zen/urlbar/**"
+      - "src/zen/tests/urlbar/**"
+      - "src/browser/components/preferences/zen-settings.js"
+      - "src/browser/components/preferences/zenLooksAndFeel.inc.xhtml"
+      - "locales/en-US/browser/browser/preferences/zen-preferences.ftl"
       - ".github/workflows/domainzen-guidebook.yml"
   workflow_dispatch:
 
