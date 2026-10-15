@@ -13,6 +13,7 @@ const MAX_GUIDEBOOK_BYTES = 256 * 1024;
 const MAX_DOMAINS = 1000;
 
 let inFlight = null;
+let inFlightUrl = "";
 let memoryGuidebook = null;
 let memoryFetchedAt = 0;
 let memorySourceUrl = "";
@@ -168,13 +169,15 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
     return persisted;
   }
 
-  if (inFlight) {
+  if (inFlight && inFlightUrl === sourceUrl) {
     return inFlight;
   }
 
+  inFlightUrl = sourceUrl;
+  const requestUrl = sourceUrl;
   inFlight = (async () => {
     try {
-      const response = await fetch(sourceUrl, {
+      const response = await fetch(requestUrl, {
         method: "GET",
         credentials: "omit",
         cache: "no-store",
@@ -204,15 +207,18 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
 
       memoryGuidebook = guidebook;
       memoryFetchedAt = Date.now();
-      memorySourceUrl = sourceUrl;
+      memorySourceUrl = requestUrl;
       writeStringPref(CACHE_PREF, JSON.stringify(guidebook));
-      writeStringPref(CACHE_SOURCE_PREF, sourceUrl);
+      writeStringPref(CACHE_SOURCE_PREF, requestUrl);
       writeIntPref(CACHE_TIME_PREF, Math.floor(memoryFetchedAt / 1000));
       return guidebook;
     } catch {
       return persisted || (memorySourceUrl === sourceUrl ? memoryGuidebook : null);
     } finally {
-      inFlight = null;
+      if (inFlightUrl === requestUrl) {
+        inFlight = null;
+        inFlightUrl = "";
+      }
     }
   })();
 
@@ -225,4 +231,5 @@ export function resetDomainZenGuidebookCacheForTests() {
   memoryFetchedAt = 0;
   memorySourceUrl = "";
   inFlight = null;
+  inFlightUrl = "";
 }
