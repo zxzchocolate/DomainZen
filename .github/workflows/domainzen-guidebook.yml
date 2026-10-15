@@ -4,6 +4,11 @@ on:
   push:
     paths:
       - "domainzen/**"
+      - "src/zen/urlbar/**"
+      - "src/zen/tests/urlbar/**"
+      - "src/browser/components/preferences/zen-settings.js"
+      - "src/browser/components/preferences/zenLooksAndFeel.inc.xhtml"
+      - "locales/en-US/browser/browser/preferences/zen-preferences.ftl"
       - ".github/workflows/domainzen-guidebook.yml"
   pull_request:
     paths:
@@ -59,3 +64,15 @@ jobs:
 
           print(f"Validated {len(domains)} mappings and {len(seen)} unique shortcuts.")
           PY
+  test-resolver:
+    name: Test shortcut resolver
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run resolver tests
+        run: node --test domainzen/tests/resolver.test.mjs
