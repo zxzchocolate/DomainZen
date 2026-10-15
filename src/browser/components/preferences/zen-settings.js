@@ -1148,6 +1148,26 @@ var gZenCKSSettings = {
 
 Preferences.addAll([
   {
+    id: "domainzen.enabled",
+    type: "bool",
+    default: true,
+  },
+  {
+    id: "domainzen.guidebook-url",
+    type: "string",
+    default: "",
+  },
+  {
+    id: "domainzen.guidebook-cache-json",
+    type: "string",
+    default: "",
+  },
+  {
+    id: "domainzen.guidebook-cache-time",
+    type: "int",
+    default: 0,
+  },
+  {
     id: "zen.view.compact.toolbar-flash-popup",
     type: "bool",
     default: true,
