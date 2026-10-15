@@ -1,0 +1,18 @@
+{
+  "$schema": "./guidebook.schema.json",
+  "schema_version": 1,
+  "name": "My Domain Guidebook",
+  "description": "Example DomainZen shortcuts. Edit this file to define your own.",
+  "domains": [
+    {
+      "name": "example",
+      "destination": "https://example.com/",
+      "aliases": ["ex"]
+    },
+    {
+      "name": "docs",
+      "destination": "https://developer.mozilla.org/",
+      "aliases": ["mdn"]
+    }
+  ]
+}
