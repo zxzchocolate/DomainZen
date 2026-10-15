@@ -1288,3 +1288,41 @@ Preferences.addSetting({
   id: "zenWorkspaceContinueWhereLeftOff",
   pref: "zen.workspaces.continue-where-left-off",
 });
+
+
+// DomainZen guidebook refresh is delegated because its controls live in a
+// preferences template that is cloned when the pane is opened.
+document.addEventListener("click", async event => {
+  const button = event.target?.closest?.("#domainzenGuidebookRefresh");
+  if (!button || button.disabled) {
+    return;
+  }
+
+  event.preventDefault();
+  const status = document.getElementById("domainzenGuidebookStatus");
+  button.disabled = true;
+  try {
+    const { getDomainZenGuidebook } = ChromeUtils.importESModule(
+      "resource:///modules/DomainZenGuidebook.sys.mjs"
+    );
+    const guidebook = await getDomainZenGuidebook({ forceRefresh: true });
+    if (status) {
+      document.l10n.setAttributes(
+        status,
+        guidebook
+          ? "domainzen-guidebook-refresh-requested"
+          : "domainzen-guidebook-refresh-no-cache"
+      );
+    }
+  } catch (error) {
+    console.error("DomainZen guidebook refresh failed", error);
+    if (status) {
+      document.l10n.setAttributes(
+        status,
+        "domainzen-guidebook-refresh-no-cache"
+      );
+    }
+  } finally {
+    button.disabled = false;
+  }
+});
