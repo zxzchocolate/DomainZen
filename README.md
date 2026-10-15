@@ -2,51 +2,38 @@
    - This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/.
-   -->
-<!-- TODO: Get a job -->
-<img src="./docs/assets/zen-dark.svg" width="100px" align="left">
+-->
 
-### `Zen Browser`
+# DomainZen
 
-[![Downloads](https://img.shields.io/github/downloads/zen-browser/desktop/total.svg)](https://github.com/zen-browser/desktop/releases)
-[![Crowdin](https://badges.crowdin.net/zen-browser/localized.svg)](https://crowdin.com/project/zen-browser)
-[![Zen Release builds](https://github.com/zen-browser/desktop/actions/workflows/build.yml/badge.svg?branch=stable)](https://github.com/zen-browser/desktop/actions/workflows/build.yml)
+**DomainZen is an experimental Zen Browser fork concept for user-controlled domain guidebooks.** A guidebook is a small JSON file that defines explicit shortcuts such as `docs` → `https://developer.mozilla.org/`.
 
-Zen is a firefox-based browser with the aim of pushing your productivity to a new level!
+> **Status:** guidebook format and validation CI are the first scaffold. The browser UI, remote-guidebook fetching, and address-bar integration are not implemented yet. This repository currently inherits the Zen Browser codebase; don't treat it as a finished DomainZen browser or download.
 
-<div flex="true">
-  <a href="https://zen-browser.app/download">
-    Download
-  </a>
-  •
-  <a href="https://zen-browser.app">
-    Website
-  </a>
-  •
-  <a href="https://docs.zen-browser.app">
-    Documentation
-  </a>
-  •
-  <a href="https://zen-browser.app/release-notes/latest">
-    Release Notes
-  </a>
-</div>
+## What we're building
 
-### Firefox Versions
+- **User-chosen guidebook URL:** users will be able to configure a HTTPS URL to a JSON guidebook.
+- **Explicit shortcuts:** names and aliases map to full HTTPS URLs. They do not claim, register, or take ownership of anyone else's domain.
+- **Safety first:** validate the guidebook, reject duplicate shortcut names, require HTTPS destinations, and keep ordinary URL navigation working.
+- **Release automation:** validate changes in GitHub Actions; native browser builds/releases need to be wired to the upstream build pipeline and configured signing/secrets before they can be published.
 
-- [`Release`](https://zen-browser.app/download) - Is currently built using Firefox version `158.0`!
-- [`Twilight`](https://zen-browser.app/download?twilight) - Is currently built using Firefox version `RC 158.0`!
+## Try the guidebook format
 
-### Contributing
+See [`guidebook.json`](./domainzen/guidebook.json) for an example and [`guidebook.schema.json`](./domainzen/guidebook.schema.json) for its schema.
 
-If you'd like to report a bug, please do so on our [GitHub Issues page](https://github.com/zen-browser/desktop/issues/) and for feature requests, you can use [GitHub Discussions](https://github.com/zen-browser/desktop/discussions).
+A guidebook is data, not executable HTML or JavaScript. A browser feature that consumes it must explicitly fetch it, validate it, and ask for confirmation before any risky navigation. Don't put passwords, tokens, or other secrets in a public guidebook.
 
-Zen is an open-source project, and we welcome contributions from the community! Please take a look at the [contribution guidelines](./docs/contribute.md) before getting started!
+## Development status
 
-#### Partners
+- [x] Initial versioned JSON guidebook format
+- [x] JSON Schema for guidebook validation
+- [x] GitHub Actions validation workflow
+- [ ] Settings UI for guidebook URL, refresh, enable/disable
+- [ ] Safe fetch/cache/validation implementation in the browser
+- [ ] Address-bar shortcut resolution and tests
+- [ ] Reproducible native builds and release pipeline
 
-Thanks to all the partners of Zen for their support and contributions:
+## Upstream
 
-<a href="https://blacksmith.sh">
-  <img src="./docs/assets/blacksmith-yellow.png" width="350px"/>
-</a>
+DomainZen is based on [Zen Browser](https://github.com/zen-browser/desktop), a Firefox-based browser. See [the upstream contribution guide](https://github.com/zen-browser/desktop/blob/dev/docs/contribute.md) and preserve the Mozilla Public License notices.
+
