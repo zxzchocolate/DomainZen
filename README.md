@@ -14,7 +14,7 @@
 
 - **User-chosen guidebook URL:** users will be able to configure a HTTPS URL to a JSON guidebook.
 - **Explicit shortcuts:** names and aliases map to full HTTPS URLs. They do not claim, register, or take ownership of anyone else's domain.
-- **Safety first:** validate the guidebook, reject duplicate shortcut names, require HTTPS destinations, and keep ordinary URL navigation working.
+- **Safety first:** validate the guidebook, reject duplicate shortcut names, require HTTPS destinations, and keep ordinary URL navigation working. Native URL/search handling must take priority; the helper only matches a bare single-word shortcut and does not probe the network.
 - **Release automation:** validate changes in GitHub Actions; native browser builds/releases need to be wired to the upstream build pipeline and configured signing/secrets before they can be published.
 
 ## Try the guidebook format
@@ -30,7 +30,8 @@ A guidebook is data, not executable HTML or JavaScript. A browser feature that c
 - [x] GitHub Actions validation workflow
 - [ ] Settings UI for guidebook URL, refresh, enable/disable
 - [ ] Safe fetch/cache/validation implementation in the browser
-- [ ] Address-bar shortcut resolution and tests
+- [x] Safe pure shortcut-matching helper (`src/zen/urlbar/DomainZenResolver.sys.mjs`); not yet connected to the address bar
+- [ ] Address-bar provider integration and automated tests
 - [ ] Reproducible native builds and release pipeline
 
 ## Upstream
