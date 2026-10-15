@@ -138,7 +138,7 @@ jobs:
           bash ./start.sh
 
       - name: Remove self-hosted runner script
-        if: always() && ${{ inputs.update_branch == 'release' }}
+        if: ${{ always() && inputs.update_branch == 'release' }}
         run: |
           echo "Removing self-hosted runner script"
           rm start.sh || true
@@ -621,7 +621,7 @@ jobs:
           bash ./stop.sh > /dev/null
 
       - name: Remove self-hosted runner script
-        if: always() && ${{ inputs.update_branch == 'release' }}
+        if: ${{ always() && inputs.update_branch == 'release' }}
         run: |
           echo "Removing self-hosted runner script"
           rm stop.sh || true
