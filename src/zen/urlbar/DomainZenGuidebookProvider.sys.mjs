@@ -38,9 +38,7 @@ export class DomainZenGuidebookProvider extends UrlbarProvider {
     ) {
       return false;
     }
-    return !!queryContext.sources?.includes(
-      UrlbarShared.RESULT_SOURCE.OTHER_LOCAL
-    );
+    return true;
   }
 
   async startQuery(queryContext, addCallback) {
