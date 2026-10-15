@@ -7,7 +7,10 @@ import {
   UrlbarUtils,
 } from "moz-src:///browser/components/urlbar/UrlbarUtils.sys.mjs";
 import { UrlbarShared } from "chrome://browser/content/urlbar/UrlbarShared.mjs";
-import { resolveGuidebookShortcut } from "./DomainZenResolver.sys.mjs";
+import {
+  normalizeShortcutCandidate,
+  resolveGuidebookShortcut,
+} from "./DomainZenResolver.sys.mjs";
 import { getDomainZenGuidebook } from "./DomainZenGuidebook.sys.mjs";
 
 const lazy = {};
@@ -27,7 +30,11 @@ export class DomainZenGuidebookProvider extends UrlbarProvider {
   }
 
   async isActive(queryContext) {
-    if (queryContext.isPrivate || !queryContext.trimmedSearchString) {
+    if (
+      queryContext.isPrivate ||
+      !normalizeShortcutCandidate(queryContext.trimmedSearchString) ||
+      !Services.prefs.getStringPref("domainzen.guidebook-url", "").startsWith("https://")
+    ) {
       return false;
     }
     return !!queryContext.sources?.includes(
