@@ -194,12 +194,12 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
 
       const text = await response.text();
       if (new TextEncoder().encode(text).byteLength > MAX_GUIDEBOOK_BYTES) {
-        return persisted || memoryGuidebook;
+        return persisted || (memorySourceUrl === sourceUrl ? memoryGuidebook : null);
       }
 
       const guidebook = validateGuidebook(JSON.parse(text));
       if (!guidebook) {
-        return persisted || memoryGuidebook;
+        return persisted || (memorySourceUrl === sourceUrl ? memoryGuidebook : null);
       }
 
       memoryGuidebook = guidebook;
@@ -210,7 +210,7 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
       writeIntPref(CACHE_TIME_PREF, Math.floor(memoryFetchedAt / 1000));
       return guidebook;
     } catch {
-      return persisted || memoryGuidebook;
+      return persisted || (memorySourceUrl === sourceUrl ? memoryGuidebook : null);
     } finally {
       inFlight = null;
     }
