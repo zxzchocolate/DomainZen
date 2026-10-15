@@ -1,0 +1,61 @@
+name: DomainZen guidebook validation
+
+on:
+  push:
+    paths:
+      - "domainzen/**"
+      - ".github/workflows/domainzen-guidebook.yml"
+  pull_request:
+    paths:
+      - "domainzen/**"
+      - ".github/workflows/domainzen-guidebook.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-guidebook:
+    name: Validate guidebook JSON
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate JSON syntax and shortcut uniqueness
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          root = Path("domainzen")
+          schema = json.loads((root / "guidebook.schema.json").read_text(encoding="utf-8"))
+          guidebook = json.loads((root / "guidebook.json").read_text(encoding="utf-8"))
+
+          assert guidebook.get("schema_version") == 1, "Unsupported schema_version"
+          assert isinstance(guidebook.get("name"), str) and guidebook["name"].strip(), "Guidebook name is required"
+          domains = guidebook.get("domains")
+          assert isinstance(domains, list), "domains must be an array"
+          assert len(domains) <= 1000, "Too many mappings"
+
+          seen = set()
+          shortcut_pattern = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$")
+          for index, item in enumerate(domains):
+              assert isinstance(item, dict), f"domains[{index}] must be an object"
+              name = item.get("name")
+              assert isinstance(name, str) and shortcut_pattern.fullmatch(name), f"Invalid shortcut name at domains[{index}]"
+              destination = item.get("destination")
+              assert isinstance(destination, str), f"Missing destination at domains[{index}]"
+              parsed = urlparse(destination)
+              assert parsed.scheme == "https" and parsed.hostname, f"Destination must be an absolute HTTPS URL: {name}"
+              assert not parsed.username and not parsed.password, f"Credentials are not allowed in destination URLs: {name}"
+              for shortcut in [name, *item.get("aliases", [])]:
+                  assert isinstance(shortcut, str) and shortcut_pattern.fullmatch(shortcut), f"Invalid shortcut/alias: {shortcut!r}"
+                  key = shortcut.casefold()
+                  assert key not in seen, f"Duplicate shortcut or alias: {shortcut}"
+                  seen.add(key)
+
+          print(f"Validated {len(domains)} mappings and {len(seen)} unique shortcuts.")
+          PY
