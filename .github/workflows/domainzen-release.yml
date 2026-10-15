@@ -1,0 +1,27 @@
+name: DomainZen all-platform prerelease
+
+on:
+  workflow_dispatch:
+    inputs:
+      disable_pgo:
+        description: "Skip profile-guided optimization (faster build, slightly less optimized)"
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  build:
+    name: Build DomainZen for Windows, macOS, and Linux
+    uses: ./.github/workflows/build.yml
+    with:
+      create_release: true
+      update_version: false
+      update_branch: twilight
+      use-sccache: false
+      disable-pgo: ${{ inputs.disable_pgo }}
+      regenerate-pgo: false
+    secrets: inherit
