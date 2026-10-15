@@ -375,3 +375,11 @@ zen-close-all-unpinned-tabs-shortcut = Close All Unpinned Tabs
 zen-new-unsynced-window-shortcut = New Blank Window
 zen-duplicate-tab-shortcut = Duplicate Tab
 zen-key-find-selection = Find Selection
+
+
+# DomainZen guidebook
+domainzen-guidebook-header = Domain guidebook
+domainzen-guidebook-description = Offer shortcuts from your own HTTPS JSON guidebook in address-bar suggestions. Normal URLs and search behavior remain available.
+domainzen-guidebook-enabled =
+    .label = Enable DomainZen guidebook shortcuts
+domainzen-guidebook-url-label = Guidebook URL
