@@ -7,6 +7,7 @@ import { normalizeShortcutCandidate } from "./DomainZenResolver.sys.mjs";
 const URL_PREF = "domainzen.guidebook-url";
 const CACHE_PREF = "domainzen.guidebook-cache-json";
 const CACHE_TIME_PREF = "domainzen.guidebook-cache-time";
+const CACHE_SOURCE_PREF = "domainzen.guidebook-cache-source";
 const CACHE_TTL_MS = 15 * 60 * 1000;
 const MAX_GUIDEBOOK_BYTES = 256 * 1024;
 const MAX_DOMAINS = 1000;
@@ -14,6 +15,7 @@ const MAX_DOMAINS = 1000;
 let inFlight = null;
 let memoryGuidebook = null;
 let memoryFetchedAt = 0;
+let memorySourceUrl = "";
 
 function readStringPref(name, fallback = "") {
   try {
@@ -144,13 +146,17 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
   if (
     !forceRefresh &&
     memoryGuidebook &&
+    memorySourceUrl === sourceUrl &&
     now - memoryFetchedAt < CACHE_TTL_MS
   ) {
     return memoryGuidebook;
   }
 
   const persistedTime = readIntPref(CACHE_TIME_PREF) * 1000;
-  const persisted = readCachedGuidebook();
+  const persisted =
+    readStringPref(CACHE_SOURCE_PREF) === sourceUrl
+      ? readCachedGuidebook()
+      : null;
   if (
     !forceRefresh &&
     persisted &&
@@ -158,6 +164,7 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
   ) {
     memoryGuidebook = persisted;
     memoryFetchedAt = persistedTime;
+    memorySourceUrl = sourceUrl;
     return persisted;
   }
 
@@ -182,7 +189,7 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
           response.headers.get("content-type") || ""
         )
       ) {
-        return persisted || memoryGuidebook;
+        return persisted || (memorySourceUrl === sourceUrl ? memoryGuidebook : null);
       }
 
       const text = await response.text();
@@ -197,7 +204,9 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
 
       memoryGuidebook = guidebook;
       memoryFetchedAt = Date.now();
+      memorySourceUrl = sourceUrl;
       writeStringPref(CACHE_PREF, JSON.stringify(guidebook));
+      writeStringPref(CACHE_SOURCE_PREF, sourceUrl);
       writeIntPref(CACHE_TIME_PREF, Math.floor(memoryFetchedAt / 1000));
       return guidebook;
     } catch {
@@ -214,5 +223,6 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
 export function resetDomainZenGuidebookCacheForTests() {
   memoryGuidebook = null;
   memoryFetchedAt = 0;
+  memorySourceUrl = "";
   inFlight = null;
 }
