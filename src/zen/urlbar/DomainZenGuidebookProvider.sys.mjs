@@ -32,6 +32,7 @@ export class DomainZenGuidebookProvider extends UrlbarProvider {
   async isActive(queryContext) {
     if (
       queryContext.isPrivate ||
+      !Services.prefs.getBoolPref("domainzen.enabled", true) ||
       !normalizeShortcutCandidate(queryContext.trimmedSearchString) ||
       !Services.prefs.getStringPref("domainzen.guidebook-url", "").startsWith("https://")
     ) {
