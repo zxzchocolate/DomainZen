@@ -185,6 +185,9 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
         headers: { Accept: "application/json" },
         signal: AbortSignal.timeout(8000),
       });
+      if (safeHttpsUrl(readStringPref(URL_PREF)) !== requestUrl) {
+        return null;
+      }
       if (
         !response.ok ||
         !safeHttpsUrl(response.url) ||
