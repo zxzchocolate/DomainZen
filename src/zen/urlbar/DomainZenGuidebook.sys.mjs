@@ -149,7 +149,7 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
     return memoryGuidebook;
   }
 
-  const persistedTime = readIntPref(CACHE_TIME_PREF);
+  const persistedTime = readIntPref(CACHE_TIME_PREF) * 1000;
   const persisted = readCachedGuidebook();
   if (
     !forceRefresh &&
@@ -198,7 +198,7 @@ export async function getDomainZenGuidebook({ forceRefresh = false } = {}) {
       memoryGuidebook = guidebook;
       memoryFetchedAt = Date.now();
       writeStringPref(CACHE_PREF, JSON.stringify(guidebook));
-      writeIntPref(CACHE_TIME_PREF, Math.floor(memoryFetchedAt));
+      writeIntPref(CACHE_TIME_PREF, Math.floor(memoryFetchedAt / 1000));
       return guidebook;
     } catch {
       return persisted || memoryGuidebook;
